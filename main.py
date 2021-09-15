@@ -1,5 +1,8 @@
 import vk_api
 import os
+import time
+from datetime import datetime
+from datetime import timedelta
 
 # GRAB THIS TOKEN FROM https://oauth.vk.com/authorize?client_id=7951582&display=page&redirect_uri=http://vk.com/ernestlistvinenko&scope=groups,wall,photos,offline&response_type=token&v=5.65
 TOKEN = "YOUR_TOKEN"
@@ -12,6 +15,23 @@ PHOTO_FILEPATH = 'image.jpg'
 
 # VK APPLICATION ID ( Don't touch it)
 APP_ID = '7951582'
+
+AT_TIME = '12:00'
+
+def set_timer():
+    hour, minute = map(int, AT_TIME.split(':'))
+    current_date = datetime.today()
+    
+    query = {
+        'days': 1,
+        'hours': hour, 
+        'minutes': minute,
+    }
+    if hour > current_date.hour or (hour == current_date.hour and minute > current_date.minute):
+        time.sleep(timedelta(hours=hour - current_date.hour, minutes = minute - current_date.minute).total_seconds())
+    else:
+        time.sleep(timedelta(**query).total_seconds())
+
 
 def get_groups():
     groups = []
@@ -63,11 +83,16 @@ class VK:
 if __name__ == "__main__":
 
     text = open(f'{os.getcwd()}/assets/piar.txt').read()
+    app = VK(TOKEN, LOGIN, PWD, APP_ID)
+
     for group in get_groups():
         query = {
             'owner_id': group,
             'message': text,
             'photo': f"assets/{PHOTO_FILEPATH}"
         }
-        VK(TOKEN, LOGIN, PWD, APP_ID).send_wall_post(**query)
+        set_timer()
+        app.send_wall_post(**query)
+
+        # time.sleep()
 
