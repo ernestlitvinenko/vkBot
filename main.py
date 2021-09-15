@@ -18,6 +18,10 @@ APP_ID = '7951582'
 
 AT_TIME = '12:00'
 
+DELAY = 5  # Delay between posts in minutes
+
+BYPASS_TIMER = True
+
 def set_timer():
     hour, minute = map(int, AT_TIME.split(':'))
     current_date = datetime.today()
@@ -91,7 +95,10 @@ if __name__ == "__main__":
             'message': text,
             'photo': f"assets/{PHOTO_FILEPATH}"
         }
-        set_timer()
+        if not BYPASS_TIMER: 
+            set_timer()
+        else:
+            time.sleep(DELAY*5) # Default sleep rate 5 minutes
         app.send_wall_post(**query)
 
         # time.sleep()
