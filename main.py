@@ -22,20 +22,16 @@ DELAY = 5  # Delay between posts in minutes
 
 BYPASS_TIMER = True
 
-def set_timer():
-    hour, minute = map(int, AT_TIME.split(':'))
+def set_timer(callback:function, props:dict, time_array:list):
     current_date = datetime.today()
     
-    query = {
-        'days': 1,
-        'hours': hour, 
-        'minutes': minute,
-    }
-    if hour > current_date.hour or (hour == current_date.hour and minute > current_date.minute):
-        time.sleep(timedelta(hours=hour - current_date.hour, minutes = minute - current_date.minute).total_seconds())
-    else:
-        time.sleep(timedelta(**query).total_seconds())
-
+    while True:
+        if f'{current_date.hour}:{current_date.minute}'  in time_array:
+            if props:
+                callback(**props)
+                continue
+            callback()
+        time.sleep(60)
 
 def get_groups():
     groups = []
@@ -96,10 +92,9 @@ if __name__ == "__main__":
             'photo': f"assets/{PHOTO_FILEPATH}"
         }
         if not BYPASS_TIMER: 
-            set_timer()
+            set_timer(app.send_wall_post, query)
         else:
             time.sleep(DELAY*5) # Default sleep rate 5 minutes
-        app.send_wall_post(**query)
 
         # time.sleep()
 
