@@ -16,7 +16,7 @@ PHOTO_FILEPATH = 'image.jpg'
 # VK APPLICATION ID ( Don't touch it)
 APP_ID = '7951582'
 
-AT_TIME = '12:00'
+AT_TIME = ['17:00']
 
 DELAY = 5  # Delay between posts in minutes
 
@@ -92,7 +92,7 @@ if __name__ == "__main__":
             'photo': f"assets/{PHOTO_FILEPATH}"
         }
         if not BYPASS_TIMER: 
-            set_timer(app.send_wall_post, query)
+            set_timer(app.send_wall_post, query, AT_TIME)
         else:
             time.sleep(DELAY*5) # Default sleep rate 5 minutes
 
