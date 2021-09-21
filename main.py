@@ -92,7 +92,7 @@ class VK:
 
 if __name__ == "__main__":
 
-    text = open(f'{os.getcwd()}/assets/piar.txt').read()
+    text = open(f'{os.getcwd()}/assets/piar.txt', encoding='utf-8').read()
     app = VK(TOKEN, LOGIN, PWD, APP_ID)
 
     for group in get_groups():
