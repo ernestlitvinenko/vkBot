@@ -31,7 +31,6 @@ def set_timer(callback, props:dict, time_array:list):
         if len(str(minute)) == 1:
             minute = f'0{current_date.minute}'
         
-        print(f'{hour}:{minute}')
         
         if f'{hour}:{minute}' in time_array:
             if props:
