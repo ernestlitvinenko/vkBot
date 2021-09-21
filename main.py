@@ -20,18 +20,24 @@ AT_TIME = ['17:00']
 
 DELAY = 5  # Delay between posts in minutes
 
-BYPASS_TIMER = True
+BYPASS_TIMER = False
 
-def set_timer(callback:function, props:dict, time_array:list):
-    current_date = datetime.today()
-    
+def set_timer(callback, props:dict, time_array:list):    
     while True:
-        if f'{current_date.hour}:{current_date.minute}'  in time_array:
+        current_date = datetime.today()
+
+        hour = current_date.hour
+        minute = current_date.minute
+        if len(str(minute)) == 1:
+            minute = f'0{current_date.minute}'
+        
+        print(f'{hour}:{minute}')
+        
+        if f'{hour}:{minute}' in time_array:
             if props:
                 callback(**props)
-                continue
-            callback()
-        time.sleep(60)
+                return
+
 
 def get_groups():
     groups = []
@@ -76,7 +82,11 @@ class VK:
     def send_wall_post(self, owner_id:str, message, photo):
         if not owner_id.isdigit():
             owner_id = self.get_group_id(owner_id)
-        self.vk.wall.post(owner_id='-'+owner_id, message=message, attachments=self.upload(photo, owner_id), v = self.v)
+        try:
+            self.vk.wall.post(owner_id='-'+owner_id, message=message, attachments=self.upload(photo, owner_id), v = self.v)
+            print("Пост отправлен")
+        except:
+            print("Что-то пошло не так")
         return
         
 
@@ -94,7 +104,6 @@ if __name__ == "__main__":
         if not BYPASS_TIMER: 
             set_timer(app.send_wall_post, query, AT_TIME)
         else:
-            time.sleep(DELAY*5) # Default sleep rate 5 minutes
-
-        # time.sleep()
+            app.send_wall_post(**query)
+        time.sleep(DELAY*60)
 
