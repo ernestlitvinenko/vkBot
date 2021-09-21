@@ -94,16 +94,16 @@ if __name__ == "__main__":
 
     text = open(f'{os.getcwd()}/assets/piar.txt', encoding='utf-8').read()
     app = VK(TOKEN, LOGIN, PWD, APP_ID)
-
-    for group in get_groups():
-        query = {
-            'owner_id': group,
-            'message': text,
-            'photo': f"assets/{PHOTO_FILEPATH}"
-        }
-        if not BYPASS_TIMER: 
-            set_timer(app.send_wall_post, query, AT_TIME)
-        else:
-            app.send_wall_post(**query)
-        time.sleep(DELAY*60)
+    while True:
+        for idx, group in enumerate(get_groups()):
+            query = {
+                'owner_id': group,
+                'message': text,
+                'photo': f"assets/{PHOTO_FILEPATH}"
+            }
+            if not BYPASS_TIMER and idx == 0: 
+                set_timer(app.send_wall_post, query, AT_TIME)
+            else:
+                app.send_wall_post(**query)
+            time.sleep(DELAY*60)
 
